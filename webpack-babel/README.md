@@ -2,7 +2,7 @@
 
 `$ npm install webpack webpack-cli babel-core babel-preset-env babel-loader --save-dev`
 
-#####Configuracao do babel .babelrc
+##### Configuracao do babel .babelrc
 
     {
       "presets": [
@@ -14,7 +14,7 @@
       ]
     }
 
-#####Criar arquivo webpack.config.js
+##### Criar arquivo webpack.config.js
 
     const path = require('path');
     
@@ -38,7 +38,7 @@
     };
 
 
-#####Caso lib javascript de terceiros(Ex Jquery), gerar o arquivo bundle separado para js da aplicacao e js vendors
+##### Caso lib javascript de terceiros(Ex Jquery), gerar o arquivo bundle separado para js da aplicacao e js vendors
     plugins.push(
         new webpack.optimize.CommonsChunkPlugin(
             { 
@@ -55,7 +55,7 @@
             vendor: ['jquery', 'bootstrap', 'reflect-metadata']
         },
 
-#####Gerar index.html com tags link  e script. plugin: html-webpack-plugin
+##### Gerar index.html com tags link  e script. plugin: html-webpack-plugin
     const HtmlWebpackPlugin = require('html-webpack-plugin');
     
     plugins.push(new HtmlWebpackPlugin({
