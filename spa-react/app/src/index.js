@@ -4,6 +4,7 @@ import App from './App';
 import StepBox from './Step';
 import Home from './Home';
 import {BrowserRouter as Router, Route,Switch} from 'react-router-dom';
+import registerServiceWorker from './registerServiceWorker';
 
 
 ReactDOM.render(
@@ -17,6 +18,6 @@ ReactDOM.render(
         </App>
     </Router>
     ,
-
     document.getElementById('root'));
 
+registerServiceWorker();
