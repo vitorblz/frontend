@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import CustomInput from './components/CustomInput.js';
 import PubSub from 'pubsub-js';
+import Menu from './Menu';
+import './css/index.css';
 
 export class StepTable extends Component {
 
@@ -90,15 +92,18 @@ export default class StepBox extends Component{
   render (){
     return(
       <div>
-        <div className="row starter-template">
-            <h1>Create Step</h1>
-        </div>
-        <div className="row form-cadastro">
-          <StepForm list={this.state.list} />
-        </div>
-        <div className="row">
-          <StepTable list={this.state.list}/>
-        </div>
+        <Menu />
+        <main role="main" className="container">
+          <div className="row">
+              <h1>Create Step</h1>
+          </div>
+          <div className="row form-cadastro">
+            <StepForm list={this.state.list} />
+          </div>
+          <div className="row">
+            <StepTable list={this.state.list}/>
+          </div>
+        </main>
       </div>
     );
   }
