@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './css/signin.css';
+import queryString from 'query-string'
 
 export default class Login extends Component{
 
-    constructor(){
-        super();
-        this.state = {msg: ''};
+    constructor(props){
+        super(props);
+        const values = queryString.parse(this.props.location.search)
+        this.state = {msg: values.msg};
     }
 
     send(event){
@@ -15,8 +17,7 @@ export default class Login extends Component{
             method: "POST",
             body: JSON.stringify({username:this.login.value,password:this.password.value}),
             headers: new Headers({
-                "Content-Type":"application/json",
-                "Access-Control-Allow-Origin" : "*"
+                "Content-Type":"application/json"
             })
 
         };
@@ -27,8 +28,13 @@ export default class Login extends Component{
                     return response.text();
                 }
                 else{
-                    this.setState({msg: 'Não foi possível realizar o login'});
+                    throw new Error("Can not authenticate!")
                 }
+            }).then(token=>{
+                localStorage.setItem('auth-token',token);
+                this.props.history.push('/');
+            }).catch(error=>{
+                this.setState({msg: error.message});
             });
     }
 
