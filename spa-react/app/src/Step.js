@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import CustomInput from './components/CustomInput.js';
-import PubSub from 'pubsub-js';
 import Menu from './Menu';
 import './css/index.css';
+import StepStore from './stores/StepStore';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export class StepTable extends Component {
 
@@ -23,11 +24,15 @@ export class StepTable extends Component {
           <th>Description</th>
         </tr>
       </thead>
-      <tbody>
+      <ReactCSSTransitionGroup 
+          component="tbody"
+          transitionName="example"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}>
         {
           this.props.list.map(this.listRow)
         }
-      </tbody>
+        </ReactCSSTransitionGroup>
       </table>
     );
   }
@@ -43,9 +48,9 @@ export class StepForm extends Component {
 
   sendForm(event){
     event.preventDefault();
-    this.props.list.push({id: this.props.list.length+1, name:this.state.name, description: this.state.description});  
+    //this.props.list.push({id: this.props.list.length+1, name:this.state.name, description: this.state.description});  
     this.setState({ id: '', name: '', description: '' });
-    PubSub.publish('updateStepList',this.props.list);
+    this.props.store.saveStep(this.state.name, this.state.description);
   }
 
   render() {
@@ -69,24 +74,21 @@ export default class StepBox extends Component{
 
   constructor(){
     super();
-    this.state = { 
-      list: [
-        {id: '1', name:'Alberto', description: 'alberto@gmail.com'}
-      ] 
-    };
-    this.updateList = this.updateList.bind(this);
+    this.state = { list: [], msg: '' };
+    this.store  = new StepStore([]);
   }
 
-  componentDidMount(){
-      this.state.list.push({id: '2', name:'Vitor', description: 'vitorblz@gmail.com'});
-      this.setState({list: this.state.list});
-      PubSub.subscribe('updateStepList',function(topico,newList){
-        this.setState({list: newList});
-      }.bind(this));
+
+  componentWillMount(){
+    this.store.subscribe(function(topico,state){ 
+      this.setState(state);
+    }.bind(this));
+
+    this.store.getSteps();
   }
 
-  updateList(newList){
-    this.setState({'list': newList})
+  componentWillUnmount(){
+    this.store.cancelSubscription();
   }
 
   render (){
@@ -98,10 +100,11 @@ export default class StepBox extends Component{
               <h1>Create Step</h1>
           </div>
           <div className="row form-cadastro">
-            <StepForm list={this.state.list} />
+            <StepForm list={this.state.list} store={this.store} />
           </div>
+          <div className="row msg" role="alert">{this.state.msg}</div>
           <div className="row">
-            <StepTable list={this.state.list}/>
+            <StepTable list={this.state.list} store={this.store}/>
           </div>
         </main>
       </div>
